@@ -39,14 +39,19 @@ Commit your code regularly and use descriptive messages. This helps both you (in
 Demonstrate your understanding of this Sprint's concepts by answering the following free-form questions. Edit this document to include your answers after each question. Make sure to leave a blank line above and below your answer so it is clear and easy to read by your Team Lead.
 
 - [ ] Mention two parts of Express that you learned about this week.
+      We learned about Express middleware and Express' server-side routing
 
 - [ ] Describe Middleware?
+      Middleware is a function that gets executed in a specific linear order.
 
 - [ ] Describe a Resource?
+      A resource is data that is stored in a database. These can be images, arrays of objects, etc. URIs are used to access each resource.
 
 - [ ] What can the API return to help clients know if a request was successful?
+      Status codes in the 200s.
 
 - [ ] How can we partition our application into sub-applications?
+      Server-side routing is helpful to do this. Set up a router for each section of resources you have, to better manage navigation to resources. Ex. /api/users and /api/posts manage different buckets of resources.
 
 ## Minimum Viable Product
 
