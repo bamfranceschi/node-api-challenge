@@ -40,7 +40,7 @@ router.get("/:id", (req, res) => {
     });
 });
 
-//POST new action on project -- posting, but can't trigger specific error messages
+//POST new action on project -- posting
 
 router.post("/", (req, res) => {
   const { project_id, description, notes } = req.body;
@@ -79,7 +79,7 @@ router.put("/:id", (req, res) => {
         res.status(400).json({
           message: "please provide description and notes for the action"
         });
-      } else if (!updatedId) {
+      } else if (!updateId) {
         res.status(404).json({
           message: "the action with the specified id does not exist"
         });
@@ -106,18 +106,29 @@ router.put("/:id", (req, res) => {
 
 //DELETE action by id --tested and working
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", validateActionId, (req, res) => {
   const deleteId = req.params.id;
 
   Actions.remove(deleteId).then(deletedAction => {
-    if (!deleteId) {
-      res
-        .status(400)
-        .json({ message: "the project with the specified id does not exist" });
-    } else {
-      res.status(200).json(deletedAction);
-    }
+    // if (!deleteId) {
+    //   res
+    //     .status(400)
+    //     .json({ message: "the project with the specified id does not exist" });
+    // } else {
+    res.status(200).json(deletedAction);
+    // }
   });
 });
+
+function validateActionId(req, res, next) {
+  Actions.get(req.params.id).then(action => {
+    if (!action) {
+      res.status(404).json({ message: "invalid action id" });
+    } else {
+      res.status(201).json(action);
+    }
+  });
+  next();
+}
 
 module.exports = router;

@@ -20,15 +20,15 @@ router.get("/", (req, res) => {
 
 //GET one project by id --tested and working
 
-router.get("/:id", (req, res) => {
+router.get("/:id", validateProjectId, (req, res) => {
   const id = req.params.id;
   Projects.get(id)
     .then(project => {
-      if (project === null) {
-        res.status(404).json({ message: "no project by that Id" });
-      } else {
-        res.status(200).json(project);
-      }
+      //   if (project === null) {
+      //     res.status(404).json({ message: "no project by that Id" });
+      //   } else {
+      res.status(200).json(project);
+      //   }
     })
     .catch(error => {
       console.log(error);
@@ -59,7 +59,7 @@ router.get("/:id/actions", (req, res) => {
     });
 });
 
-//POST new project --posting works, but can't trigger 400 error message
+//POST new project --posting works
 
 router.post("/", (req, res) => {
   const { name, description } = req.body;
@@ -94,7 +94,7 @@ router.put("/:id", (req, res) => {
         res.status(400).json({
           message: "please provide name and description for the project"
         });
-      } else if (!updatedId) {
+      } else if (!updateId) {
         res.status(404).json({
           message: "the project with the specified id does not exist"
         });
@@ -125,7 +125,7 @@ router.delete("/:id", (req, res) => {
   const deleteId = req.params.id;
 
   Projects.remove(deleteId).then(deletedProject => {
-    if (!deleteId) {
+    if (deletedProject === 0) {
       res
         .status(400)
         .json({ message: "the project with the specified id does not exist" });
@@ -134,5 +134,16 @@ router.delete("/:id", (req, res) => {
     }
   });
 });
+
+function validateProjectId(req, res, next) {
+  Projects.get(req.params.id).then(project => {
+    if (!project) {
+      res.status(404).json({ message: "invalid project id" });
+    } else {
+      res.status(201).json(project);
+    }
+  });
+  next();
+}
 
 module.exports = router;
